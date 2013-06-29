@@ -1,0 +1,7 @@
+*.cache
+*.o
+*~
+*.log
+*.status
+src/*deps/*.*o
+stamp-h*
