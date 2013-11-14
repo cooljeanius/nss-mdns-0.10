@@ -1,0 +1,5 @@
+README
+*libs/*
+*.lo
+README.html
+Makefile

@@ -1,0 +1,16 @@
+libnss_mdns*.la
+so_locations
+*libs/*
+nss-test avahi-test
+*.o
+*.lo
+*.tab.c
+TAGS
+ID
+GTAGS
+GRTAGS
+GSYMS
+GPATH
+tags
+*deps/*.*o
+Makefile
