@@ -28,27 +28,27 @@ run_versioned() {
 }
 
 echo "Just run \"autoreconf\" with your favorite flags next time instead of using this script..."
-if [ "x$1" = "xam" ] ; then
+if [ "x${1}" = "xam" ] ; then
     set -ex
-    run_versioned automake "$VERSION" -a -c --foreign
+    run_versioned automake "${VERSION}" --add-missing --copy --foreign
     ./config.status
 else 
     set -ex
 
-    rm -rf autom4te.cache
-    rm -f config.cache
+    test -d autom4te.cache && rm -rf autom4te.cache
+    test -e config.cahce && rm -f config.cache
 
-    run_versioned aclocal "$VERSION"
-    if [ -x `which libtoolize` ]; then
-    	libtoolize -c --force
-    elif [ -x `which glibtoolize` ]; then
-    	glibtoolize -c --force
+    run_versioned aclocal "${VERSION}" --force
+    if [ -x "$(which libtoolize)" ]; then
+    	libtoolize --copy --force --automake
+    elif [ -x "$(which glibtoolize)" ]; then
+    	glibtoolize --copy --force --automake 
     fi
-    autoheader
-    run_versioned automake "$VERSION" -a -c --foreign
-    autoconf -Wall
+    autoheader --force
+    run_versioned automake "${VERSION}" --add-missing --copy --foreign
+    autoconf --force -Wall
 
-    CFLAGS="$CFLAGS -g -O0" ./configure --sysconfdir=/etc --localstatedir=/var "$@"
+    CFLAGS="${CFLAGS} -g -O0" ./configure --sysconfdir=/etc --localstatedir=/var "$@"
 
     make clean
 fi

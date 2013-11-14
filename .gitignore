@@ -10,6 +10,7 @@ stamp-h*
 config.h
 stamp-h*
 libtool
+libtool.old
 config.lt
 TAGS
 ID
