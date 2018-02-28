@@ -14,3 +14,6 @@ GPATH
 tags
 *deps/*.*o
 Makefile
+*.dSYM
+avahi-test
+nss-test

@@ -20,6 +20,7 @@
 EXTRA_DIST = map-file
 
 AM_CFLAGS = \
+	$(NSS_CFLAGS) \
 	-DMDNS_ALLOW_FILE=\"$(sysconfdir)/mdns.allow\" \
 	-DRESOLV_CONF_FILE=\"$(sysconfdir)/resolv.conf\" \
 	-DAVAHI_SOCKET=\"$(localstatedir)/run/avahi-daemon/socket\"

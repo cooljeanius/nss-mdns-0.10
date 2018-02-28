@@ -53,6 +53,9 @@
 /* Define to 1 if you have the <nss.h> header file. */
 #undef HAVE_NSS_H
 
+/* Define to 1 if you have the <nss/nss.h> header file. */
+#undef HAVE_NSS_NSS_H
+
 /* Define to 1 if you have the `select' function. */
 #undef HAVE_SELECT
 
@@ -119,8 +122,7 @@
 /* Honour search domains from /etc/resolv.conf */
 #undef HONOUR_SEARCH_DOMAINS
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #undef LT_OBJDIR
 
 /* Name of package */
