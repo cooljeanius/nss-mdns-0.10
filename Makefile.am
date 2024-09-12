@@ -22,6 +22,7 @@ ACLOCAL_AMFLAGS = -I m4 --install
 EXTRA_DIST=bootstrap.sh README LICENSE
 SUBDIRS=src doc
 
+DISTCLEANFILES = *~ autoscan.log
 MAINTAINERCLEANFILES=README
 noinst_DATA = README
 
@@ -37,3 +38,6 @@ homepage: all dist
 	ln -sf README.html $$HOME/homepage/private/projects/nss-mdns/index.html
 
 .PHONY: homepage
+
+distclean-local:
+	rm -rf autom4te.cache || rmdir autom4te.cache

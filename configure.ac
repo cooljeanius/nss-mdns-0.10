@@ -36,6 +36,21 @@ ac_default_prefix="/"
 
 # Checks for programs.
 AM_PROG_AR
+if test "x${AR}" = "x"; then
+  test -z "${AR}" || unset AR
+  AC_CHECK_TOOLS([AR],[ar gar])dnl
+  ## might want to switch around these checks...
+  if test "x${ac_cv_prog_AR}" = "x"; then
+    test -z "${ac_cv_prog_AR}" || unset ac_cv_prog_AR
+    m4_ifdef([AC_PROG_AR],[
+      AC_PROG_AR
+    ],[
+      test -x "`which ar`" && echo "first ar in path is `which ar`"
+    ])
+  fi
+else
+  test -n "${AR}" && export AR
+fi
 AM_PROG_CC_C_O
 AC_PROG_CPP
 AC_PROG_INSTALL
@@ -43,7 +58,7 @@ AC_PROG_LN_S
 AX_CHECK_GNU_MAKE([])dnl
 
 test_gcc_flag() {
-    AC_LANG_CONFTEST([AC_LANG_SOURCE([int main() {}])])
+    AC_LANG_CONFTEST([AC_LANG_SOURCE([int main(void) {}])])
     $CC -c conftest.c $CFLAGS $@ > /dev/null 2> /dev/null
     ret=$?
     rm -f conftest.o
@@ -72,14 +87,42 @@ fi
 AC_DISABLE_STATIC
 LT_INIT([disable-static win32-dll])
 LT_LANG([C])dnl
+  ## keep autoscan happy:
+if test "x${RANLIB}" = "x"; then
+  test -z "${RANLIB}" || unset RANLIB
+  AC_PROG_RANLIB
+else
+  test -n "${RANLIB}" && export RANLIB
+fi
 
 PKG_CHECK_MODULES([NSS],[nss],[CPPFLAGS="${CPPFLAGS} ${NSS_CFLAGS}"],
                   [AC_MSG_ERROR([Need nss to compile])])dnl
 
 # Checks for header files.
 AC_HEADER_TIME
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h netdb.h netinet/in.h stdio.h \
-                  sys/param.h sys/time.h nss.h nss/nss.h sys/ioctl.h])dnl
+AC_CHECK_HEADERS([arpa/inet.h fcntl.h netdb.h netinet/in.h nss.h nss/nss.h \
+                  sys/param.h sys/ioctl.h])dnl
+
+if test "x${ac_cv_header_inttypes_h}" = "x"; then
+  test -z "${ac_cv_header_inttypes_h}" || unset ac_cv_header_inttypes_h
+  AC_CHECK_HEADERS([inttypes.h]) # (keep autoscan happy)
+fi
+if test "x${ac_cv_header_stdio_h}" = "x"; then
+  test -z "${ac_cv_header_stdio_h}" || unset ac_cv_header_stdio_h
+  AC_CHECK_HEADERS([stdio.h]) # (keep me happy)
+fi
+if test "x${ac_cv_header_sys_socket_h}" = "x"; then
+  test -z "${ac_cv_header_sys_socket_h}" || unset ac_cv_header_sys_socket_h
+  AC_CHECK_HEADERS([sys/socket.h]) # (keep autoscan happy)
+fi
+if test "x${ac_cv_header_sys_time_h}" = "x"; then
+  test -z "${ac_cv_header_sys_time_h}" || unset ac_cv_header_sys_time_h
+  AC_CHECK_HEADERS([sys/time.h]) # (keep me happy)
+fi
+if test "x${ac_cv_header_unistd_h}" = "x"; then
+  test -z "${ac_cv_header_unistd_h}" || unset ac_cv_header_unistd_h
+  AC_CHECK_HEADERS([unistd.h]) # (keep autoscan happy)
+fi
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
@@ -104,13 +147,13 @@ case ${host} in
      *-freebsd*) freebsd="yes" ;;
 esac
 
-AM_CONDITIONAL([FREEBSD_NSS],[test "x$freebsd" = "xyes"])dnl
+AM_CONDITIONAL([FREEBSD_NSS],[test "x${freebsd}" = "xyes"])dnl
 
 # If using GCC specify some additional parameters
 if test "x${GCC}" = "xyes"; then
    CFLAGS="${CFLAGS} -pipe -Wall -Wextra -pedantic"
 
-   AC_LANG_CONFTEST([AC_LANG_SOURCE([int main() {}])])
+   AC_LANG_CONFTEST([AC_LANG_SOURCE([int main(int argc, char **argv) {}])])
    ${CC} -c conftest.c -std=c99 -Wno-unused-parameter ${CFLAGS} > /dev/null 2> /dev/null && CFLAGS="${CFLAGS} -std=c99 -Wno-unused-parameter"
    rm -f conftest.o
 fi
@@ -125,13 +168,13 @@ AC_ARG_ENABLE([lynx],
   *) AC_MSG_ERROR([bad value ${enableval} for --disable-lynx]) ;;
 esac],[lynx=yes])dnl
 
-if test x$lynx = xyes ; then
+if test "x${lynx}" = "xyes"; then
    AC_CHECK_PROG([have_lynx],[lynx],[yes],[no])dnl
 
-   if test x$have_lynx = xno ; then
+   if test "x${have_lynx}" = "xno"; then
      lynx=no
      AC_CHECK_PROG([have_links],[links],[yes],[no])
-     if test x$have_links = xno ; then
+     if test "x${have_links}" = "xno"; then
        AC_MSG_WARN([*** neither lynx nor links found, plain text README will not be built ***])
      else
        links=yes
@@ -154,7 +197,7 @@ AC_ARG_ENABLE([avahi],
         esac],
         [ENABLE_AVAHI=yes]) dnl# Default value
 
-AM_CONDITIONAL([ENABLE_AVAHI],[test "x$ENABLE_AVAHI" = "xyes"])dnl
+AM_CONDITIONAL([ENABLE_AVAHI],[test "x${ENABLE_AVAHI}" = "xyes"])dnl
 
 if test "x${ENABLE_AVAHI}" = "xyes"; then
    AC_DEFINE([ENABLE_AVAHI],[1],
@@ -173,16 +216,16 @@ AC_ARG_ENABLE([legacy],
         esac],
         [ENABLE_LEGACY=no]) dnl# Default value
 
-if test "x$ENABLE_AVAHI" = "xno" -a "x$ENABLE_LEGACY" = "xno"; then
+if test "x${ENABLE_AVAHI}" = "xno" -a "x${ENABLE_LEGACY}" = "xno"; then
 	AC_MSG_ERROR([Cannot disable legacy unicast mDNS lookups if Avahi support is disabled])
 fi
 
-if test "x$ENABLE_LEGACY" = "xyes"; then
+if test "x${ENABLE_LEGACY}" = "xyes"; then
    AC_DEFINE([ENABLE_LEGACY],[1],
              [Enable legacy unicast mDNS lookups when Avahi is NOT available])
 fi
 
-AM_CONDITIONAL([ENABLE_LEGACY],[test "x$ENABLE_LEGACY" = "xyes"])dnl
+AM_CONDITIONAL([ENABLE_LEGACY],[test "x${ENABLE_LEGACY}" = "xyes"])dnl
 
 ### Honor search domains from /etc/resolv.conf?
 
@@ -196,7 +239,7 @@ AC_ARG_ENABLE([search-domains],
         esac],
         [HONOUR_SEARCH_DOMAINS=no]) dnl# Default value
 
-if test "x$HONOUR_SEARCH_DOMAINS" = "xyes"; then
+if test "x${HONOUR_SEARCH_DOMAINS}" = "xyes"; then
    AC_DEFINE([HONOUR_SEARCH_DOMAINS],[1],
              [Honour search domains from /etc/resolv.conf])
 fi

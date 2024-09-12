@@ -130,17 +130,21 @@ nss_test_SOURCES = \
 	nss-test.c
 
 install-exec-hook:
-	rm -f $(DESTDIR)$(libdir)/libnss_mdns.la 
-	rm -f $(DESTDIR)$(libdir)/libnss_mdns_minimal.la 
-	rm -f $(DESTDIR)$(libdir)/libnss_mdns4.la 
-	rm -f $(DESTDIR)$(libdir)/libnss_mdns4_minimal.la 
-	rm -f $(DESTDIR)$(libdir)/libnss_mdns6.la 
-	rm -f $(DESTDIR)$(libdir)/libnss_mdns6_minimal.la 
+	rm -f $(DESTDIR)$(libdir)/libnss_mdns.la
+	rm -f $(DESTDIR)$(libdir)/libnss_mdns_minimal.la
+	rm -f $(DESTDIR)$(libdir)/libnss_mdns4.la
+	rm -f $(DESTDIR)$(libdir)/libnss_mdns4_minimal.la
+	rm -f $(DESTDIR)$(libdir)/libnss_mdns6.la
+	rm -f $(DESTDIR)$(libdir)/libnss_mdns6_minimal.la
 
 uninstall-hook:
-	rm -f $(DESTDIR)$(libdir)/libnss_mdns.so.2 
-	rm -f $(DESTDIR)$(libdir)/libnss_mdns_minimal.so.2 
-	rm -f $(DESTDIR)$(libdir)/libnss_mdns4.so.2 
-	rm -f $(DESTDIR)$(libdir)/libnss_mdns4_minimal.so.2 
-	rm -f $(DESTDIR)$(libdir)/libnss_mdns6.so.2 
-	rm -f $(DESTDIR)$(libdir)/libnss_mdns6_minimal.so.2 
+	rm -f $(DESTDIR)$(libdir)/libnss_mdns.so.2
+	rm -f $(DESTDIR)$(libdir)/libnss_mdns_minimal.so.2
+	rm -f $(DESTDIR)$(libdir)/libnss_mdns4.so.2
+	rm -f $(DESTDIR)$(libdir)/libnss_mdns4_minimal.so.2
+	rm -f $(DESTDIR)$(libdir)/libnss_mdns6.so.2
+	rm -f $(DESTDIR)$(libdir)/libnss_mdns6_minimal.so.2
+
+distclean-local:
+	rm -rf .deps || rmdir .deps
+	rm -rf *.dSYM || rmdir *.dSYM

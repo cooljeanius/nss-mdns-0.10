@@ -21,6 +21,9 @@ GPATH
 tags
 cscope*.out
 cscope.files
+confdefs.h
 config*.lineno
+conftest*
+conf*/*.awk
 Makefile
 gcc-root/*
